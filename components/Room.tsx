@@ -2,17 +2,17 @@
 import { useName } from '@/context/name';
 import React from 'react'
 import Sidebar from './Sidebar';
-import Editor from './Editor';
+import EditorPage from "./EditorPage";
 
 const Room = () => {
   const { name } = useName();  
 
   return (
-    <div className='grid grid-cols-[250px,1fr] h-screen'>
-        <Sidebar/>
-        <Editor/>
+    <div className="grid grid-cols-[250px,1fr] h-screen">
+      <Sidebar />
+      <EditorPage />
     </div>
-  )
+  );
 }
 
 export default Room

@@ -6,3 +6,17 @@ body{
     background-color: #1C2025;
     color: white;
 }
+
+.monaco-editor .margin {
+    background-color: #1C2025!important;
+}
+.monaco-editor {
+    background-color: #1C2025!important;
+}
+.monaco-editor,
+.monaco-editor-background{
+    background-color: #1C2025 !important;
+}
+canvas{
+    background-color: #1C2025 !important;
+}

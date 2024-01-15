@@ -1,12 +1,13 @@
 "use client";
 import Image from "next/image";
-import React from "react";
+import React, { useState } from "react";
 import VsLogo from "../public/assets/file-type-vscode.svg";
 import ReactLogo from "../public/assets/reactjs.svg";
 import JSLogo from "../public/assets/js.svg";
 import HtmlLogo from "../public/assets/html.svg";
 import PyLogo from "../public/assets/python.svg";
 import File from "./File";
+import CreateFilePopup from "./CreateFilePopup";
 
 interface SidebarButtonType {
   children: React.ReactNode;
@@ -14,6 +15,7 @@ interface SidebarButtonType {
 }
 
 const Sidebar = () => {
+  const [showPopup,setShowPopup] = useState(false);
   return (
     <div className="border-r border-gray-800 bg-base h-full text-gray-300">
       {/* header */}
@@ -32,7 +34,9 @@ const Sidebar = () => {
       {/* If no file is created*/}
       <div className="text-[12px] px-4 py-3 grid gap-3">
         <p>You have not yet created any file.</p>
-        <SidebarButton>Create a file</SidebarButton>
+        <SidebarButton onClick={() => setShowPopup(true)}>
+          Create a file
+        </SidebarButton>
         <p>You can open any file from your computer to online vs code.</p>
         <SidebarButton>Open a file</SidebarButton>
       </div>
@@ -44,6 +48,7 @@ const Sidebar = () => {
         <File image={HtmlLogo}>page.html</File>
         <File image={ReactLogo}>page.jsx</File>
       </div>
+      {showPopup && <CreateFilePopup setShowPopup={setShowPopup} />}
     </div>
   );
 };
@@ -52,7 +57,10 @@ export default Sidebar;
 
 const SidebarButton = ({ children, onClick }: SidebarButtonType) => {
   return (
-    <button className="bg-[#323845] w-full py-2 text-white flex justify-center items-center rounded-sm hover:bg-gray-600 transition duration-150">
+    <button
+      className="bg-[#323845] w-full py-2 text-white flex justify-center items-center rounded-sm hover:bg-gray-600 transition duration-150"
+      onClick={onClick}
+    >
       {children}
     </button>
   );
