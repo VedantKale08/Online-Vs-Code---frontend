@@ -8,7 +8,7 @@ import axios from "axios";
 import Terminal from "./Terminal";
 
 const EditorPage = () => {
-  const [outputDetails, setOutputDetails] = useState(null);
+  const [outputDetails, setOutputDetails] = useState({});
   const [code, setCode] = useState("");
   const editorRef = useRef<unknown>(null);
   const terminalRef = useRef<unknown>(null);
