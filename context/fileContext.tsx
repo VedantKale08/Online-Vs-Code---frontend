@@ -16,6 +16,7 @@ export type ExportValue = {
   handleClose: (id: string) => void;
   setCurFile: (file: File) => void;
   setFileOpen: (id: string | undefined) => void;
+  setContent: (id: string | undefined,content:string) => void;
 };
 
 const fileContext = createContext<ExportValue | null>(null);
@@ -52,6 +53,9 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
       });
       return updatedFiles;
     });
+    if(currentFile && id === currentFile.id){
+      setCurrentFile(null);
+    }
   };
 
   const setCurFile = (file: File) => {
@@ -74,6 +78,21 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
     files.find(file => file.id === id && setCurFile(file))
   };
 
+  const setContent = (id: string | undefined,content:string) => {
+    setFiles((prev: File[]) => {
+      const updatedFiles = prev.map((file) => {
+        if (file.id === id) {
+          return {
+            ...file,
+            content: content,
+          };
+        }
+        return file;
+      });
+      return updatedFiles;
+    });
+  };
+
   return (
     <fileContext.Provider
       value={{
@@ -83,6 +102,7 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
         handleClose,
         setCurFile,
         setFileOpen,
+        setContent,
       }}
     >
       {children}
