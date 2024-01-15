@@ -3,11 +3,10 @@ import Image from "next/image";
 import React, { useState } from "react";
 import VsLogo from "../public/assets/file-type-vscode.svg";
 import ReactLogo from "../public/assets/reactjs.svg";
-import JSLogo from "../public/assets/js.svg";
-import HtmlLogo from "../public/assets/html.svg";
-import PyLogo from "../public/assets/python.svg";
 import File from "./File";
 import CreateFilePopup from "./CreateFilePopup";
+import { useFile } from "@/context/fileContext";
+import { FilePlus2 } from "lucide-react";
 
 interface SidebarButtonType {
   children: React.ReactNode;
@@ -15,7 +14,9 @@ interface SidebarButtonType {
 }
 
 const Sidebar = () => {
-  const [showPopup,setShowPopup] = useState(false);
+  const [showPopup, setShowPopup] = useState(false);
+  const { files } = useFile();
+
   return (
     <div className="border-r border-gray-800 bg-base h-full text-gray-300">
       {/* header */}
@@ -27,26 +28,34 @@ const Sidebar = () => {
       </div>
 
       {/* title */}
-      <div className="bg-[#1C2025] text-sm py-1 px-4">
-        <p>Your files</p>
+      <div className="bg-[#1C2025] text-sm py-1 px-4 flex items-center">
+        <p className="flex-1">Your files</p>
+        {files.length !== 0 && (
+          <FilePlus2
+            size={15}
+            className="text-gray-300 cursor-pointer hover:opacity-80"
+            onClick={() => setShowPopup(true)}
+          />
+        )}
       </div>
-
       {/* If no file is created*/}
-      <div className="text-[12px] px-4 py-3 grid gap-3">
-        <p>You have not yet created any file.</p>
-        <SidebarButton onClick={() => setShowPopup(true)}>
-          Create a file
-        </SidebarButton>
-        <p>You can open any file from your computer to online vs code.</p>
-        <SidebarButton>Open a file</SidebarButton>
-      </div>
+      {files.length === 0 && (
+        <div className="text-[12px] px-4 py-3 grid gap-3">
+          <p>You have not yet created any file.</p>
+          <SidebarButton onClick={() => setShowPopup(true)}>
+            Create a file
+          </SidebarButton>
+          <p>You can open any file from your computer to online vs code.</p>
+          <SidebarButton>Open a file</SidebarButton>
+        </div>
+      )}
 
       <div className="text-sm py-3">
-        <File image={ReactLogo}>page.tsx</File>
-        <File image={JSLogo}>page.js</File>
-        <File image={PyLogo}>page.py</File>
-        <File image={HtmlLogo}>page.html</File>
-        <File image={ReactLogo}>page.jsx</File>
+        {files.map((file, index) => (
+          <File key={index} id={file.id} ext={file.ext} image={ReactLogo}>
+            {file.name}
+          </File>
+        ))}
       </div>
       {showPopup && <CreateFilePopup setShowPopup={setShowPopup} />}
     </div>

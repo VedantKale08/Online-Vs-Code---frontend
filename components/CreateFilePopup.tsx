@@ -1,18 +1,28 @@
-import { X } from 'lucide-react';
-import React from 'react'
+import { useFile } from "@/context/fileContext";
+import { X } from "lucide-react";
+import React, { useState } from "react";
 
 interface CreateFilePopupType {
-  setShowPopup : (data:boolean) => void
+  setShowPopup: (data: boolean) => void;
 }
 
 const CreateFilePopup = ({ setShowPopup }: CreateFilePopupType) => {
+  const [name, setName] = useState("");
+  const { handleNewFile } = useFile();
+
+  const handleCreateFile = () => {
+    let ext = name.substr(name.indexOf(".") + 1);
+    handleNewFile({ name, ext });
+    setShowPopup(false);
+  };
+
   return (
     <div className="bg-black bg-opacity-50 absolute inset-0 z-[999] flex justify-center items-center">
       <div
         className="absolute right-6 top-5"
         onClick={() => setShowPopup(false)}
       >
-        <X size={30}/>
+        <X size={30} />
       </div>
       <div className="bg-base border border-gray-600 rounded-xl p-5 pb-9  px-7 md:w-[30%] shadow-md flex flex-col items-center gap-6">
         <p className="text-lg text-white font-bold py-5">Creating new file</p>
@@ -23,8 +33,8 @@ const CreateFilePopup = ({ setShowPopup }: CreateFilePopupType) => {
             id="roomId"
             type="text"
             required
-            // value={roomId}
-            // onChange={(e) => setRoomId(e.target.value)}
+            value={name}
+            onChange={(e) => setName(e.target.value)}
           />
           <label
             htmlFor="roomId"
@@ -34,7 +44,7 @@ const CreateFilePopup = ({ setShowPopup }: CreateFilePopupType) => {
           </label>
         </div>
         <button
-          // onClick={joinRoom}
+          onClick={handleCreateFile}
           className="bg-[#277dff] text-white rounded-md px-4 py-2 w-full hover:scale-105 transition duration-200"
         >
           Create new file
@@ -44,4 +54,4 @@ const CreateFilePopup = ({ setShowPopup }: CreateFilePopupType) => {
   );
 };
 
-export default CreateFilePopup
+export default CreateFilePopup;
