@@ -31,6 +31,7 @@ const EditorPage = () => {
       setContent(currentFile.id, value);
     }
   };
+  
 
   const handleCompile = () => {
     if (currentFile) {

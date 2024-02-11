@@ -1,5 +1,8 @@
 "use client";
+import socket from "@/components/Socket/socketInstance";
+import { useParams } from "next/navigation";
 import { createContext, useContext, useState } from "react";
+import { useName } from "./name";
 
 export type File = {
   id?: string;
@@ -16,7 +19,8 @@ export type ExportValue = {
   handleClose: (id: string) => void;
   setCurFile: (file: File) => void;
   setFileOpen: (id: string | undefined) => void;
-  setContent: (id: string | undefined,content:string) => void;
+  setContent: (id: string | undefined, content: string) => void;
+  socketHandleFile: (file: File) => void;
 };
 
 const fileContext = createContext<ExportValue | null>(null);
@@ -24,6 +28,8 @@ const fileContext = createContext<ExportValue | null>(null);
 export const FileProvider = ({ children }: { children: React.ReactNode }) => {
   const [files, setFiles] = useState<File[]>([]);
   const [currentFile, setCurrentFile] = useState<File | null>(null);
+  const roomId = useParams().id;
+  const {id} = useName();
 
   const handleNewFile = ({ name, ext }: File) => {
     const nFile = {
@@ -37,7 +43,28 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
       const newFile = [nFile, ...prev];
       return newFile;
     });
+    socket.emit("content-change", roomId, id, nFile);
     setCurrentFile(nFile);
+  };
+
+  const socketHandleFile = (file: File) => {
+    setFiles((prevFiles: File[]) => {
+      const fileIndex = prevFiles.findIndex(
+        (prevFile) => prevFile.id === file.id
+      );
+      if (fileIndex !== -1) {
+        const updatedFiles = prevFiles.map((prevFile, index) => {
+          if (index === fileIndex) {
+            return file;
+          }
+          return prevFile;
+        });
+        return updatedFiles;
+      } else {
+        return [file, ...prevFiles];
+      }
+    });
+    setCurFile(file)
   };
 
   const handleClose = (id: string) => {
@@ -58,7 +85,7 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
     }
   };
 
-  const setCurFile = (file: File) => {
+  const setCurFile = (file: File) => {    
     setCurrentFile(file);
   };
 
@@ -82,10 +109,12 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
     setFiles((prev: File[]) => {
       const updatedFiles = prev.map((file) => {
         if (file.id === id) {
-          return {
+          const nFile = {
             ...file,
             content: content,
           };
+          socket.emit("content-change",roomId, id, nFile);
+          return nFile;
         }
         return file;
       });
@@ -103,6 +132,7 @@ export const FileProvider = ({ children }: { children: React.ReactNode }) => {
         setCurFile,
         setFileOpen,
         setContent,
+        socketHandleFile,
       }}
     >
       {children}

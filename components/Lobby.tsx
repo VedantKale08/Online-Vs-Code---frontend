@@ -4,6 +4,7 @@ import { useRouter } from "next/navigation";
 import React, { useState } from "react";
 import { v4 as uuidv4 } from "uuid";
 
+
 const Lobby = () => {
   const [roomId, setRoomId] = useState("");
   const router = useRouter();
@@ -25,7 +26,7 @@ const Lobby = () => {
 
   return (
     <div className="h-screen flex justify-center items-center">
-      <div className="bg-base border border-gray-600 rounded-xl p-5 pb-9  px-7 md:w-[30%] shadow-md flex flex-col items-center gap-6">
+      <div className="bg-base border border-gray-600 rounded-xl p-5 pb-9  px-7 lg:w-[30%] shadow-md flex flex-col items-center gap-6">
         <p className="text-3xl text-white font-bold py-5">
           Online <span className="text-[#277dff]">VS code</span>
         </p>

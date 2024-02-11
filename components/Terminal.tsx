@@ -17,22 +17,29 @@ const Terminal = ({ outputDetails }: { outputDetails: OutputDetailsType }) => {
       let statusId = outputDetails?.status?.id;
       if (statusId === 6) {
         // compilation error
-        setOutput(atob(outputDetails?.compile_output));
+        setOutput(
+          atob(
+            outputDetails?.compile_output ? outputDetails?.compile_output : ""
+          )
+        );
+        setError(true);
       } else if (statusId === 3) {
-        setOutput(atob(outputDetails?.stdout));
+        setOutput(atob(outputDetails?.stdout ? outputDetails?.stdout : ""));
+        setError(false);
       } else if (statusId === 5) {
         setOutput("Time limit exceeded");
+        setError(true);
       } else {
-        setOutput(atob(outputDetails?.stderr));
+        setOutput(atob(outputDetails?.stderr ? outputDetails?.stderr : ""));
         setError(true);
       }
     }
   };
 
-  useEffect(()=>{
+  useEffect(() => {
     getOutput();
-  },[outputDetails])
-  
+  }, [outputDetails]);
+
   return (
     <div>
       <h1 className="font-bold text-lg bg-[#1C2025] text-gray-300 px-2 border-t border-b border-gray-600">
@@ -42,9 +49,9 @@ const Terminal = ({ outputDetails }: { outputDetails: OutputDetailsType }) => {
         <span className="text-cyan-400">Online-vs-code : </span>
         {outputDetails ? (
           <pre
-            className={`px-2 py-1 font-normal text-xs ${
+            className={`${
               error ? "text-red-500" : "text-green-500"
-            }`}
+            } px-2 py-1 font-normal text-xs`}
           >
             {output}
           </pre>
